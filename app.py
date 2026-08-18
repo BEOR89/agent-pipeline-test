@@ -16,3 +16,7 @@ def power(a, b):
 def square(a):
     """Returns the square of a number."""
     return a ** 2
+
+def cube(a):
+    """Returns the cube of a number."""
+    return a ** 3
