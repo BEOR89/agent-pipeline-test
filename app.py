@@ -23,3 +23,6 @@ def square(a):
 def cube(a):
     """Returns the cube of a number."""
     return a ** 3
+
+def modulo(a, b):
+    return a % b
