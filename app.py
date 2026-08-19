@@ -26,3 +26,6 @@ def cube(a):
 
 def modulo(a, b):
     return a % b
+
+async def noop_async_smoke():
+    return 'ok'

@@ -1,5 +1,6 @@
+import asyncio
 import pytest
-from app import add, subtract, multiply, divide, power, square, cube, modulo
+from app import add, subtract, multiply, divide, power, square, cube, modulo, noop_async_smoke
 
 def test_add():
     assert add(2, 3) == 5
@@ -46,3 +47,6 @@ def test_modulo():
     assert modulo(14, 7) == 0
     assert modulo(-10, 3) == 2
     assert modulo(10.5, 4) == 2.5
+
+def test_noop_async_smoke():
+    assert asyncio.run(noop_async_smoke()) == 'ok'
