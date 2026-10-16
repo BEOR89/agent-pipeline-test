@@ -1,6 +1,6 @@
 import asyncio
 import pytest
-from app import add, subtract, multiply, divide, power, square, cube, modulo, noop_async_smoke
+from app import add, subtract, multiply, divide, power, square, cube, modulo, is_even, noop_async_smoke
 
 def test_add():
     assert add(2, 3) == 5
@@ -47,6 +47,21 @@ def test_modulo():
     assert modulo(14, 7) == 0
     assert modulo(-10, 3) == 2
     assert modulo(10.5, 4) == 2.5
+
+def test_is_even_even_integer():
+    assert is_even(4) is True
+    assert is_even(0) is True
+    assert is_even(-6) is True
+
+def test_is_even_odd_integer():
+    assert is_even(3) is False
+    assert is_even(-5) is False
+    assert is_even(1) is False
+
+def test_is_even_rejects_non_integer_inputs():
+    for bad in [2.5, "4", True, None]:
+        with pytest.raises(TypeError):
+            is_even(bad)
 
 def test_noop_async_smoke():
     assert asyncio.run(noop_async_smoke()) == 'ok'

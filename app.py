@@ -27,6 +27,18 @@ def cube(a):
 def modulo(a, b):
     return a % b
 
+
+def is_even(value):
+    """Returns True if value is an even integer, False if odd.
+
+    Raises TypeError for non-integer inputs. bool is explicitly rejected even
+    though it is a subclass of int.
+    """
+    if not isinstance(value, int) or isinstance(value, bool):
+        raise TypeError("is_even accepts integer inputs only")
+    return value % 2 == 0
+
+
 async def noop_async_smoke():
     return 'ok'
 
