@@ -50,6 +50,17 @@ def is_positive(value):
     return value > 0
 
 
+def is_negative(value):
+    """Returns True if value is an integer less than zero, False otherwise.
+
+    Raises TypeError for non-integer inputs. bool is explicitly rejected even
+    though it is a subclass of int.
+    """
+    if not isinstance(value, int) or isinstance(value, bool):
+        raise TypeError("is_negative accepts integer inputs only")
+    return value < 0
+
+
 async def noop_async_smoke():
     return 'ok'
 
