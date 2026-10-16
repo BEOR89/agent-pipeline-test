@@ -54,6 +54,7 @@ def test_noop_async_smoke():
 
 # --- System One shadow-routing pilot ---
 
+import app
 from app import primary_add, system_one_add, shadow_route, route_operation
 
 def test_shadow_route_disabled_does_not_invoke_shadow():
@@ -112,6 +113,102 @@ def test_route_operation_shadow_enabled_parity(op, a, b, expected):
     assert value == expected
     assert report.divergent is False
     assert report.shadow_error is None
+
+@pytest.mark.parametrize("op, a, b, expected", [
+    ("subtract", 5, 3, 2),
+    ("multiply", 4, 3, 12),
+    ("divide", 8, 2, 4),
+    ("power", 2, 3, 8),
+    ("modulo", 10, 3, 1),
+])
+def test_route_operation_ops_without_candidate_shadow_themselves(op, a, b, expected):
+    value, report = route_operation(op, a, b, shadow_enabled=True)
+    assert value == expected
+    assert report.primary_handler == op
+    assert report.shadow_handler == op
+    assert report.shadow_value == expected
+
+def test_route_operation_add_uses_system_one_shadow():
+    value, report = route_operation("add", 2, 3, shadow_enabled=True)
+    assert value == 5
+    assert report.primary_handler == "add"
+    assert report.shadow_handler == "system_one_add"
+    assert report.shadow_value == 5
+    assert report.divergent is False
+    assert report.shadow_error is None
+    assert app.SYSTEM_ONE_OPS["add"] is system_one_add
+
+def test_route_operation_add_shadow_disabled_reports_system_one_handler():
+    value, report = route_operation("add", 2, 3)
+    assert value == 5
+    assert report.shadow_handler == "system_one_add"
+    assert report.shadow_value is None
+
+def test_route_operation_raising_shadow_returns_primary(monkeypatch):
+    def raising_shadow(a, b):
+        raise RuntimeError("shadow down")
+
+    monkeypatch.setitem(app.SYSTEM_ONE_OPS, "add", raising_shadow)
+    value, report = route_operation("add", 2, 3, shadow_enabled=True)
+    assert value == 5
+    assert report.primary_value == 5
+    assert report.shadow_error == "RuntimeError: shadow down"
+    assert report.shadow_value is None
+    assert report.divergent is False
+
+class _Incomparable:
+    """Value whose comparisons raise; addition yields another instance."""
+
+    def __add__(self, other):
+        return _Incomparable()
+
+    def __eq__(self, other):
+        raise TypeError("cannot compare")
+
+    def __ne__(self, other):
+        raise TypeError("cannot compare")
+
+    __hash__ = object.__hash__
+
+def test_shadow_route_comparison_error_is_captured():
+    primary_value = _Incomparable()
+    shadow_value = _Incomparable()
+    value, report = shadow_route(lambda a, b: primary_value,
+                                 lambda a, b: shadow_value,
+                                 1, 2, shadow_enabled=True)
+    assert value is primary_value
+    assert report.primary_value is primary_value
+    assert report.shadow_value is shadow_value
+    assert report.shadow_error == "comparison failed: TypeError: cannot compare"
+    assert report.divergent is False
+
+class _Unbooleanable:
+    def __bool__(self):
+        raise ValueError("ambiguous truth value")
+
+class _AmbiguousCompare:
+    def __ne__(self, other):
+        return _Unbooleanable()
+
+    __hash__ = object.__hash__
+
+def test_shadow_route_ambiguous_comparison_result_is_captured():
+    value, report = shadow_route(lambda a, b: 5,
+                                 lambda a, b: _AmbiguousCompare(),
+                                 2, 3, shadow_enabled=True)
+    assert value == 5
+    assert report.shadow_error == "comparison failed: ValueError: ambiguous truth value"
+    assert report.divergent is False
+
+def test_route_operation_add_comparison_error_returns_primary():
+    value, report = route_operation("add", _Incomparable(), _Incomparable(),
+                                    shadow_enabled=True)
+    assert isinstance(value, _Incomparable)
+    assert report.primary_value is value
+    assert report.shadow_handler == "system_one_add"
+    assert isinstance(report.shadow_value, _Incomparable)
+    assert report.shadow_error == "comparison failed: TypeError: cannot compare"
+    assert report.divergent is False
 
 def test_route_operation_shadow_disabled():
     value, report = route_operation("multiply", 4, 3)

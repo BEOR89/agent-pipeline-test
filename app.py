@@ -73,7 +73,9 @@ def shadow_route(primary, shadow, a, b, *, shadow_enabled=False):
 
     The primary result is always returned unchanged; primary exceptions
     propagate. The shadow is only invoked when shadow_enabled is True, and
-    any exception it raises is captured in the report.
+    any exception it raises is captured in the report. An exception raised
+    while comparing the shadow value to the primary value is also captured
+    (prefixed with "comparison failed: "); divergent stays False in that case.
     """
     primary_value = primary(a, b)
     shadow_value = None
@@ -85,7 +87,10 @@ def shadow_route(primary, shadow, a, b, *, shadow_enabled=False):
         except Exception as exc:
             shadow_error = f"{type(exc).__name__}: {exc}"
         else:
-            divergent = shadow_value != primary_value
+            try:
+                divergent = bool(shadow_value != primary_value)
+            except Exception as exc:
+                shadow_error = f"comparison failed: {type(exc).__name__}: {exc}"
     report = ShadowReport(
         primary_handler=getattr(primary, "__name__", repr(primary)),
         shadow_handler=getattr(shadow, "__name__", repr(shadow)),
@@ -93,7 +98,7 @@ def shadow_route(primary, shadow, a, b, *, shadow_enabled=False):
         primary_value=primary_value,
         shadow_value=shadow_value,
         shadow_error=shadow_error,
-        divergent=bool(divergent),
+        divergent=divergent,
     )
     return primary_value, report
 
@@ -106,9 +111,9 @@ BINARY_OPS = {
     "modulo": modulo,
 }
 
-# Parity baseline: identical to BINARY_OPS at pilot start. Pilot work swaps
-# entries here for System One candidates (e.g. "add": system_one_add).
-SYSTEM_ONE_OPS = dict(BINARY_OPS)
+# Shadow handlers per op. Ops without a System One candidate shadow themselves
+# (parity baseline); "add" is shadowed by its System One candidate.
+SYSTEM_ONE_OPS = {**BINARY_OPS, "add": system_one_add}
 
 def route_operation(op, a, b, *, shadow_enabled=False):
     """Routes op to its primary handler, optionally shadowed by System One.
