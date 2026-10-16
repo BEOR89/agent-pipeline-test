@@ -136,7 +136,18 @@ def test_route_operation_add_uses_system_one_shadow():
     assert report.shadow_value == 5
     assert report.divergent is False
     assert report.shadow_error is None
-    assert app.SYSTEM_ONE_OPS["add"] is system_one_add
+
+def test_route_operation_divergent_shadow_returns_primary(monkeypatch):
+    def divergent_shadow(a, b):
+        return 42
+
+    monkeypatch.setitem(app.SYSTEM_ONE_OPS, "add", divergent_shadow)
+    value, report = route_operation("add", 2, 3, shadow_enabled=True)
+    assert value == 5
+    assert report.primary_value == 5
+    assert report.divergent is True
+    assert report.shadow_value == 42
+    assert report.shadow_error is None
 
 def test_route_operation_add_shadow_disabled_reports_system_one_handler():
     value, report = route_operation("add", 2, 3)
