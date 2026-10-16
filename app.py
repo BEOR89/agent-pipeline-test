@@ -72,6 +72,17 @@ def is_zero(value):
     return value == 0
 
 
+def is_nonzero(value):
+    """Returns True for any nonzero integer, False only for the integer zero.
+
+    Integer subclasses are accepted. bool is explicitly rejected even though
+    it is a subclass of int; other non-integer inputs raise TypeError.
+    """
+    if not isinstance(value, int) or isinstance(value, bool):
+        raise TypeError("is_nonzero accepts integer inputs only")
+    return value != 0
+
+
 async def noop_async_smoke():
     return 'ok'
 

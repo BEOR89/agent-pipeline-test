@@ -16,3 +16,18 @@ is_zero(42)   # -> False
 is_zero(-7)   # -> False
 is_zero(True) # raises TypeError
 ```
+
+## is_nonzero
+
+`is_nonzero(value)` returns `True` for any nonzero integer (integer
+subclasses included) and `False` only for the integer zero. It raises
+`TypeError` for booleans and non-integer inputs.
+
+```python
+from app import is_nonzero
+
+is_nonzero(0)    # -> False
+is_nonzero(42)   # -> True
+is_nonzero(-7)   # -> True
+is_nonzero(True) # raises TypeError
+```
