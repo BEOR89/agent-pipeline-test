@@ -5,4 +5,4 @@ __pycache__/
 # Local AI pipeline artifacts
 .ai/plans/
 .ai/handoffs/
-.ai/reviews/
+/.ai/reviews/

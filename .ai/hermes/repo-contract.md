@@ -11,6 +11,10 @@ Hermes workers may modify only:
 - `app.py`
 - `tests/`
 - `README.md`
+- `ARCHITECTURE.md`
+- `PROJECT.md`
+- `TODO.md`
+- `.gitignore`
 - `.ai/hermes/repo-contract.md`
 
 ## Forbidden paths
@@ -37,6 +41,7 @@ Hermes workers must not modify or access as implementation targets:
 - Review must return PASS before a human creates a commit.
 - Review must confirm that changes are limited to allowed paths and do not affect forbidden paths.
 - Review must confirm that the required test command passes when tests are applicable.
+- The tracked `.gitignore` must contain the exact rooted rule `/.ai/reviews/` before final review; other `.ai/` paths must remain visible to repository-state checks.
 
 ## Commit policy
 
