@@ -31,3 +31,18 @@ is_nonzero(42)   # -> True
 is_nonzero(-7)   # -> True
 is_nonzero(True) # raises TypeError
 ```
+
+## is_nonnegative
+
+`is_nonnegative(value)` returns `True` for any integer greater than or
+equal to zero (integer subclasses included) and `False` for negative
+integers. It raises `TypeError` for booleans and non-integer inputs.
+
+```python
+from app import is_nonnegative
+
+is_nonnegative(0)   # -> True
+is_nonnegative(42)  # -> True
+is_nonnegative(-7)  # -> False
+is_nonnegative(True) # raises TypeError
+```
