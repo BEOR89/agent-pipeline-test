@@ -39,6 +39,17 @@ def is_even(value):
     return value % 2 == 0
 
 
+def is_odd(value):
+    """Returns True if value is an odd integer, False if even.
+
+    Integer subclasses are accepted. bool is explicitly rejected even though
+    it is a subclass of int; other non-integer inputs raise TypeError.
+    """
+    if not isinstance(value, int) or isinstance(value, bool):
+        raise TypeError("is_odd accepts integer inputs only")
+    return value % 2 == 1
+
+
 def is_positive(value):
     """Returns True if value is an integer greater than zero, False otherwise.
 
