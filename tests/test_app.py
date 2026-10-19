@@ -1,6 +1,6 @@
 import asyncio
 import pytest
-from app import add, subtract, multiply, divide, power, square, cube, modulo, is_even, is_positive, is_negative, is_zero, is_nonzero, is_nonnegative, is_nonpositive, noop_async_smoke
+from app import add, subtract, multiply, divide, power, square, cube, modulo, is_even, is_odd, is_positive, is_negative, is_zero, is_nonzero, is_nonnegative, is_nonpositive, noop_async_smoke
 
 def test_add():
     assert add(2, 3) == 5
@@ -62,6 +62,41 @@ def test_is_even_rejects_non_integer_inputs():
     for bad in [2.5, "4", True, None]:
         with pytest.raises(TypeError):
             is_even(bad)
+
+
+def test_is_odd_odd_integer():
+    assert is_odd(1) is True
+    assert is_odd(3) is True
+    assert is_odd(41) is True
+    assert is_odd(10**6 + 1) is True
+
+
+def test_is_odd_negative_odd_integer():
+    assert is_odd(-1) is True
+    assert is_odd(-5) is True
+    assert is_odd(-(10**6 + 1)) is True
+
+
+def test_is_odd_even_integer():
+    assert is_odd(0) is False
+    assert is_odd(2) is False
+    assert is_odd(-4) is False
+    assert is_odd(10**6) is False
+
+
+def test_is_odd_accepts_integer_subclass():
+    class _MyInt(int):
+        pass
+
+    assert is_odd(_MyInt(3)) is True
+    assert is_odd(_MyInt(-7)) is True
+    assert is_odd(_MyInt(4)) is False
+
+
+def test_is_odd_rejects_non_integer_inputs():
+    for bad in [2.5, "3", True, False, None]:
+        with pytest.raises(TypeError):
+            is_odd(bad)
 
 
 def test_is_positive_positive_integer():
