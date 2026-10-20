@@ -182,6 +182,17 @@ def is_six(value):
     return value == 6
 
 
+def is_seven(value):
+    """Returns True if value is the integer seven, False for any other integer.
+
+    Integer subclasses are accepted. bool is explicitly rejected even though
+    it is a subclass of int; other non-integer inputs raise TypeError.
+    """
+    if not isinstance(value, int) or isinstance(value, bool):
+        raise TypeError("is_seven accepts integer inputs only")
+    return value == 7
+
+
 async def noop_async_smoke():
     return 'ok'
 

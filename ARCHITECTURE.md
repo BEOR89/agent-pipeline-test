@@ -9,3 +9,4 @@ Current public function:
 - is_four(value)
 - is_five(value)
 - is_six(value)
+- is_seven(value)
