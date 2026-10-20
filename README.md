@@ -46,3 +46,18 @@ is_nonnegative(42)  # -> True
 is_nonnegative(-7)  # -> False
 is_nonnegative(True) # raises TypeError
 ```
+
+## is_two
+
+`is_two(value)` returns `True` only for the integer two (integer
+subclasses included) and `False` for any other integer. It raises
+`TypeError` for booleans and non-integer inputs.
+
+```python
+from app import is_two
+
+is_two(2)    # -> True
+is_two(42)   # -> False
+is_two(-7)   # -> False
+is_two(True) # raises TypeError
+```
