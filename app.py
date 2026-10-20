@@ -138,6 +138,17 @@ def is_two(value):
     return value == 2
 
 
+def is_three(value):
+    """Returns True if value is the integer three, False for any other integer.
+
+    Integer subclasses are accepted. bool is explicitly rejected even though
+    it is a subclass of int; other non-integer inputs raise TypeError.
+    """
+    if not isinstance(value, int) or isinstance(value, bool):
+        raise TypeError("is_three accepts integer inputs only")
+    return value == 3
+
+
 async def noop_async_smoke():
     return 'ok'
 
