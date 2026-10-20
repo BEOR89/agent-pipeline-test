@@ -1,6 +1,6 @@
 import asyncio
 import pytest
-from app import add, subtract, multiply, divide, power, square, cube, modulo, is_even, is_odd, is_positive, is_negative, is_zero, is_nonzero, is_nonnegative, is_nonpositive, is_one, is_two, is_three, noop_async_smoke
+from app import add, subtract, multiply, divide, power, square, cube, modulo, is_even, is_odd, is_positive, is_negative, is_zero, is_nonzero, is_nonnegative, is_nonpositive, is_one, is_two, is_three, is_four, noop_async_smoke
 
 def test_add():
     assert add(2, 3) == 5
@@ -326,6 +326,34 @@ def test_is_three_rejects_non_integer_inputs():
     for bad in [2.5, "3", True, False, None]:
         with pytest.raises(TypeError):
             is_three(bad)
+
+
+def test_is_four_four_integer():
+    assert is_four(4) is True
+
+
+def test_is_four_non_four_integer():
+    assert is_four(0) is False
+    assert is_four(1) is False
+    assert is_four(2) is False
+    assert is_four(3) is False
+    assert is_four(42) is False
+    assert is_four(10**6) is False
+
+
+def test_is_four_accepts_integer_subclass():
+    class _MyInt(int):
+        pass
+
+    assert is_four(_MyInt(4)) is True
+    assert is_four(_MyInt(1)) is False
+    assert is_four(_MyInt(3)) is False
+
+
+def test_is_four_rejects_non_integer_inputs():
+    for bad in [2.5, "4", True, False, None]:
+        with pytest.raises(TypeError):
+            is_four(bad)
 
 
 def test_noop_async_smoke():
