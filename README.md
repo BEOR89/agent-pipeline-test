@@ -121,3 +121,18 @@ is_six(42)   # -> False
 is_six(-7)   # -> False
 is_six(True) # raises TypeError
 ```
+
+## is_seven
+
+`is_seven(value)` returns `True` only for the integer seven (integer
+subclasses included) and `False` for any other integer. It raises
+`TypeError` for booleans and non-integer inputs.
+
+```python
+from app import is_seven
+
+is_seven(7)    # -> True
+is_seven(42)   # -> False
+is_seven(-7)   # -> False
+is_seven(True) # raises TypeError
+```
