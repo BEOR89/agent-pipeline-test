@@ -1,6 +1,6 @@
 import asyncio
 import pytest
-from app import add, subtract, multiply, divide, power, square, cube, modulo, is_even, is_odd, is_positive, is_negative, is_zero, is_nonzero, is_nonnegative, is_nonpositive, noop_async_smoke
+from app import add, subtract, multiply, divide, power, square, cube, modulo, is_even, is_odd, is_positive, is_negative, is_zero, is_nonzero, is_nonnegative, is_nonpositive, is_one, noop_async_smoke
 
 def test_add():
     assert add(2, 3) == 5
@@ -245,6 +245,33 @@ def test_is_nonpositive_rejects_non_integer_inputs():
     for bad in [2.5, "0", True, False, None]:
         with pytest.raises(TypeError):
             is_nonpositive(bad)
+
+
+def test_is_one_one_integer():
+    assert is_one(1) is True
+
+
+def test_is_one_non_one_integer():
+    assert is_one(0) is False
+    assert is_one(-1) is False
+    assert is_one(2) is False
+    assert is_one(42) is False
+    assert is_one(10**6) is False
+
+
+def test_is_one_accepts_integer_subclass():
+    class _MyInt(int):
+        pass
+
+    assert is_one(_MyInt(1)) is True
+    assert is_one(_MyInt(0)) is False
+    assert is_one(_MyInt(2)) is False
+
+
+def test_is_one_rejects_non_integer_inputs():
+    for bad in [2.5, "1", True, False, None]:
+        with pytest.raises(TypeError):
+            is_one(bad)
 
 
 def test_noop_async_smoke():
