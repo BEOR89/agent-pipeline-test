@@ -1,6 +1,6 @@
 import asyncio
 import pytest
-from app import add, subtract, multiply, divide, power, square, cube, modulo, is_even, is_odd, is_positive, is_negative, is_zero, is_nonzero, is_nonnegative, is_nonpositive, is_one, is_two, is_three, is_four, is_five, noop_async_smoke
+from app import add, subtract, multiply, divide, power, square, cube, modulo, is_even, is_odd, is_positive, is_negative, is_zero, is_nonzero, is_nonnegative, is_nonpositive, is_one, is_two, is_three, is_four, is_five, is_six, noop_async_smoke
 
 def test_add():
     assert add(2, 3) == 5
@@ -383,6 +383,36 @@ def test_is_five_rejects_non_integer_inputs():
     for bad in [2.5, "5", True, False, None]:
         with pytest.raises(TypeError):
             is_five(bad)
+
+
+def test_is_six_six_integer():
+    assert is_six(6) is True
+
+
+def test_is_six_non_six_integer():
+    assert is_six(0) is False
+    assert is_six(1) is False
+    assert is_six(2) is False
+    assert is_six(3) is False
+    assert is_six(4) is False
+    assert is_six(5) is False
+    assert is_six(42) is False
+    assert is_six(10**6) is False
+
+
+def test_is_six_accepts_integer_subclass():
+    class _MyInt(int):
+        pass
+
+    assert is_six(_MyInt(6)) is True
+    assert is_six(_MyInt(1)) is False
+    assert is_six(_MyInt(5)) is False
+
+
+def test_is_six_rejects_non_integer_inputs():
+    for bad in [2.5, "6", True, False, None]:
+        with pytest.raises(TypeError):
+            is_six(bad)
 
 
 def test_noop_async_smoke():
