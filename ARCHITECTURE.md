@@ -8,3 +8,4 @@ Current public function:
 - is_three(value)
 - is_four(value)
 - is_five(value)
+- is_six(value)
