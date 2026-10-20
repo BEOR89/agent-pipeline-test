@@ -7,3 +7,4 @@ Current public function:
 - is_two(value)
 - is_three(value)
 - is_four(value)
+- is_five(value)
