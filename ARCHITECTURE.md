@@ -6,3 +6,4 @@ Current public function:
 - add(a, b)
 - is_two(value)
 - is_three(value)
+- is_four(value)
